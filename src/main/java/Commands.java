@@ -22,6 +22,7 @@ public interface Commands {
     String ADD_PATIENT = "5";
     String PRINT_ALL_PATIENT_BY_DOCTOR = "6";
     String PRINT_ALL_PATIENT = "7";
+    String EXPORT_PATIENT_EXCEL = "8";
 
     static void printMainManu() {
         System.out.println("Please input " + EXIT + " for exit");
@@ -38,6 +39,7 @@ public interface Commands {
         System.out.println("Please input " + ADD_PATIENT + " for added patient");
         System.out.println("Please input " + PRINT_ALL_PATIENT_BY_DOCTOR + " for print all patient by doctor");
         System.out.println("Please input " + PRINT_ALL_PATIENT + " for print all patient");
+        System.out.println("Please input " + EXPORT_PATIENT_EXCEL + " for export patients excel");
     }
 
     static void printProfessionLevelMenu() {

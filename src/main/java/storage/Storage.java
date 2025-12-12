@@ -50,6 +50,10 @@ public class Storage<T> implements Serializable {
         return (User) map.get(email);
     }
 
+    public List<T> getPatients() {
+        return objects;
+    }
+
 
     public void searchDoctorByProfession(Profession profession) {
         for (T object : objects) {
@@ -66,6 +70,7 @@ public class Storage<T> implements Serializable {
             boolean remove = objects.removeIf(o -> o instanceof Doctor doctor && id == doctor.getId());
             if (!remove) {
                 System.out.printf("Doctor with %s id does not exist!!!",id);
+                System.out.println();
             }
         }
         else {
@@ -104,7 +109,7 @@ public class Storage<T> implements Serializable {
         boolean found = false;
 
         for (T object : objects) {
-            if (object instanceof Patient && ((Patient) object).getDoctor().equals(doctor)) {
+            if (object instanceof Patient patient && patient.getDoctor().equals(doctor)) {
                 System.out.println(object);
                 found = true;
             }

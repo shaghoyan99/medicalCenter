@@ -6,10 +6,19 @@ import model.Patient;
 import model.Profession;
 import model.Role;
 import model.User;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import storage.Storage;
 import util.CheckEmailUtil;
+import util.DateUtil;
 import util.FillUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class MedicalCenter implements Commands {
@@ -29,7 +38,7 @@ public class MedicalCenter implements Commands {
             switch (command) {
                 case EXIT -> isRun = false;
                 case LOGIN -> login();
-                case REGISTER ->{
+                case REGISTER -> {
                     register();
                     FillUtil.writeDataUser(us);
                 }
@@ -53,11 +62,11 @@ public class MedicalCenter implements Commands {
                 User user = new User(us.generateUserId(), name, surname, email, password, Role.USER);
                 us.add(user);
                 System.out.println("Register successful");
-            }else  {
+            } else {
                 System.err.println("Email already in use");
             }
 
-        }catch (WrongEmailException e){
+        } catch (WrongEmailException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -85,7 +94,7 @@ public class MedicalCenter implements Commands {
             Commands.printUserMenu();
             String command = scanner.nextLine();
             switch (command) {
-                case LOGOUT ->{
+                case LOGOUT -> {
                     currentUser = null;
                     isRun = false;
                 }
@@ -108,8 +117,50 @@ public class MedicalCenter implements Commands {
                 }
                 case PRINT_ALL_PATIENT_BY_DOCTOR -> printAllPatientsByDoctor();
                 case PRINT_ALL_PATIENT -> ps.printAllPatients();
+                case EXPORT_PATIENT_EXCEL -> exportPatientsToExcel();
                 default -> System.err.println("Invalid command");
             }
+        }
+    }
+
+    private static void exportPatientsToExcel() {
+        List<Patient> patients = ps.getPatients();
+        if (patients.isEmpty()) {
+            System.out.println("No patients found");
+            return;
+        }
+        System.out.println("Please input folder path for export ");
+        String path = scanner.nextLine();
+        File folder = new File(path);
+        if (folder.exists() && folder.isDirectory()) {
+            try (Workbook workbook = new XSSFWorkbook()) {
+                Sheet sheet = workbook.createSheet("Patients");
+                Row header = sheet.createRow(0);
+                header.createCell(0).setCellValue("ID");
+                header.createCell(1).setCellValue("Name");
+                header.createCell(2).setCellValue("Surname");
+                header.createCell(3).setCellValue("Register Date");
+                header.createCell(4).setCellValue("Doctor Name");
+                int rowNum = 1;
+                for (Patient patient : patients) {
+                    Row row = sheet.createRow(rowNum++);
+                    row.createCell(0).setCellValue(patient.getId());
+                    row.createCell(1).setCellValue(patient.getName());
+                    row.createCell(2).setCellValue(patient.getSurname());
+                    row.createCell(3).setCellValue(DateUtil.fromDateToStr(patient.getRegisterDateTime()));
+                    row.createCell(4).setCellValue(patient.getDoctor().getName());
+                }
+                File file = new File(folder, System.currentTimeMillis() + "patients.xlsx");
+                try (FileOutputStream out = new FileOutputStream(file)) {
+                    workbook.write(out);
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            System.out.println("Folder does not exist or is not a directory");
         }
     }
 
