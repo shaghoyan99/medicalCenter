@@ -18,9 +18,12 @@ public class User implements Serializable {
     private String name;
     private String surName;
     private String email;
-    private String password;
+    private transient String password;
+    private String encryptedPassword;
     private Role role;
 
-
-
+    public void setPassword(String password) {
+        this.password = password;
+        this.encryptedPassword = PasswordUtil.encrypt(password);
+    }
 }

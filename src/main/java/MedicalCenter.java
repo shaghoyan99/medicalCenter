@@ -58,10 +58,15 @@ public class MedicalCenter implements Commands {
         try {
             String email = CheckEmailUtil.isValidEmail(emailStr);
             System.out.println("Please input password ");
-            String passwordStr = scanner.nextLine();
-            String password = PasswordUtil.encrypt(passwordStr);
+            String password = scanner.nextLine();
             if (us.getUserByEmail(email) == null) {
-                User user = new User(us.generateUserId(), name, surname, email, password, Role.USER);
+                User user = new User();
+                user.setId(ds.generateUserId());
+                user.setName(name);
+                user.setSurName(surname);
+                user.setEmail(email);
+                user.setPassword(password);
+                user.setRole(Role.USER);
                 us.add(user);
                 System.out.println("Register successful");
             } else {
@@ -79,7 +84,7 @@ public class MedicalCenter implements Commands {
         System.out.println("Please input password");
         String password = scanner.nextLine();
         User userByEmail = us.getUserByEmail(email);
-        if (userByEmail != null && PasswordUtil.decrypt(userByEmail.getPassword()).equals(password)) {
+        if (userByEmail != null && PasswordUtil.decrypt(userByEmail.getEncryptedPassword()).equals(password)) {
             currentUser = userByEmail;
             System.out.println("Welcome " + userByEmail.getName());
             userLogin();
