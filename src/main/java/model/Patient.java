@@ -17,6 +17,8 @@ public class Patient extends Person implements Serializable {
     private Date registerDateTime;
 
     public Patient(int id, String name, String surname, String phoneNumber, Doctor doctor) {
+        super(id, name, surname, phoneNumber);
+        this.doctor = doctor;
     }
 
     @Override

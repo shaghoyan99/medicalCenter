@@ -15,6 +15,10 @@ public class Doctor extends Person implements Serializable {
     private Profession profession;
 
     public Doctor(int id, String name, String surname, String phoneNumber, String email, Profession profession) {
+        super(id, name, surname, phoneNumber);
+        this.email = email;
+        this.profession = profession;
+
     }
 
 

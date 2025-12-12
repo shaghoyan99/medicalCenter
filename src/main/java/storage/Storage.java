@@ -10,6 +10,7 @@ import model.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,10 @@ public class Storage<T> implements Serializable {
             map.put(user.getEmail(), type);
             return;
         }
+        if (type instanceof Patient patient) {
+            patient.setRegisterDateTime(new Date());
+            objects.add(type);
+        }
         objects.add(type);
     }
 
@@ -48,8 +53,8 @@ public class Storage<T> implements Serializable {
 
     public void searchDoctorByProfession(Profession profession) {
         for (T object : objects) {
-            if (object instanceof Doctor && profession.equals(((Doctor) object).getProfession())) {
-                System.out.println(object);
+            if (object instanceof Doctor doctor && profession.equals(doctor.getProfession())) {
+                System.out.println(doctor);
                 return;
             }
         }
@@ -58,11 +63,7 @@ public class Storage<T> implements Serializable {
 
     public void deleteDoctorById(int id) {
         if (!objects.isEmpty()) {
-            for (T object : objects) {
-                if (object instanceof Doctor && id == ((Doctor) object).getId()) {
-                    objects.remove(object);
-                }
-            }
+            objects.removeIf(o -> o instanceof Doctor doctor && id == doctor.getId());
             System.out.println("Doctor deleted successfully");
         } else {
             System.out.println("Doctor with " + id + " id does not exist!!!");
@@ -80,6 +81,10 @@ public class Storage<T> implements Serializable {
     }
 
     public void printAllDoctors() {
+        if (objects.isEmpty()) {
+            System.out.println("No doctors");
+            return;
+        }
         for (T object : objects) {
             if (object instanceof Doctor) {
                 System.out.println(object);
@@ -88,17 +93,32 @@ public class Storage<T> implements Serializable {
     }
 
     public void printPatientsByDoctor(Doctor doctor) {
+        if (objects.isEmpty()) {
+            System.out.println("No patients");
+            return;
+        }
+
+        boolean found = false;
+
         for (T object : objects) {
             if (object instanceof Patient && ((Patient) object).getDoctor().equals(doctor)) {
                 System.out.println(object);
+                found = true;
             }
+        }
+
+        if (!found) {
+            System.out.println("Patient with " + doctor.getName() + " id does not exist!!!");
         }
     }
 
     public void printAllPatients() {
+        if (objects.isEmpty()) {
+            System.out.println("No patients");
+        }
         for (T object : objects) {
-            if (object instanceof Patient) {
-                System.out.println(object);
+            if (object instanceof Patient patient) {
+                System.out.println(patient);
             }
         }
     }
