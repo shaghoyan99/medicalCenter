@@ -2,7 +2,9 @@ package model;
 
 
 import exception.ProfessionNotFoundException;
+import lombok.Getter;
 
+@Getter
 public enum Profession {
 
     DENTIST("1"),
@@ -19,10 +21,6 @@ public enum Profession {
 
     Profession(String code) {
         this.code = code;
-    }
-
-    public String getCode() {
-        return code;
     }
 
     public static Profession fromCode(String code) throws ProfessionNotFoundException {

@@ -63,10 +63,13 @@ public class Storage<T> implements Serializable {
 
     public void deleteDoctorById(int id) {
         if (!objects.isEmpty()) {
-            objects.removeIf(o -> o instanceof Doctor doctor && id == doctor.getId());
-            System.out.println("Doctor deleted successfully");
-        } else {
-            System.out.println("Doctor with " + id + " id does not exist!!!");
+            boolean remove = objects.removeIf(o -> o instanceof Doctor doctor && id == doctor.getId());
+            if (!remove) {
+                System.out.printf("Doctor with %s id does not exist!!!",id);
+            }
+        }
+        else {
+            System.out.println("No doctors");
         }
 
     }
