@@ -4,8 +4,7 @@ import exception.WrongEmailException;
 import model.Doctor;
 import model.Patient;
 import model.Profession;
-import storage.DoctorStorage;
-import storage.PatientStorage;
+import storage.Storage;
 import util.CheckEmailUtil;
 import util.FillUtil;
 
@@ -14,8 +13,8 @@ import java.util.Scanner;
 public class MedicalCenter implements Commands {
 
     private static final Scanner scanner = new Scanner(System.in);
-    private static final DoctorStorage ds = FillUtil.deserializeDoctorStorage();
-    private static final PatientStorage ps = FillUtil.deserializePatientStorage();
+    private static final Storage<Doctor> ds = FillUtil.readData(FillUtil.DOCTOR_DATA_FILE);
+    private static final Storage<Patient> ps = FillUtil.readData(FillUtil.PATIENT_DATA_FILE);
 
 
     public static void main(String[] args) {
@@ -28,20 +27,20 @@ public class MedicalCenter implements Commands {
                 case EXIT -> isRun = false;
                 case ADD_DOCTOR -> {
                     addDoctor();
-                    FillUtil.serializeDoctorData(ds);
+                    FillUtil.writeDataDoctor(ds);
                 }
                 case SEARCH_DOCTOR_BY_PROFESSION -> searchDoctorByProfession();
                 case DELETE_DOCTOR_BY_ID -> {
                     deleteDoctorById();
-                    FillUtil.serializeDoctorData(ds);
+                    FillUtil.writeDataDoctor(ds);
                 }
                 case CHANGE_DOCTOR_BY_ID -> {
                     changeDoctorById();
-                    FillUtil.serializeDoctorData(ds);
+                    FillUtil.writeDataDoctor(ds);
                 }
                 case ADD_PATIENT -> {
                     addPatient();
-                    FillUtil.serializePatientData(ps);
+                    FillUtil.writeDataPatient(ps);
                 }
                 case PRINT_ALL_PATIENT_BY_DOCTOR -> printAllPatientsByDoctor();
                 case PRINT_ALL_PATIENT -> ps.printAllPatients();
@@ -65,7 +64,7 @@ public class MedicalCenter implements Commands {
             String professionCode = scanner.nextLine();
             Profession profession = Profession.fromCode(professionCode);
             Doctor doctor = new Doctor(ds.generateId(), name, surname, phoneNumber, email, profession);
-            ds.addDoctor(doctor);
+            ds.add(doctor);
             System.out.println("Doctor was added !!!");
         } catch (ProfessionNotFoundException | WrongEmailException e) {
             System.out.println(e.getMessage());
@@ -140,7 +139,7 @@ public class MedicalCenter implements Commands {
         try {
             Doctor doctorById = ds.getDoctorById(doctorId);
             Patient patient = new Patient(id, name, surname, phoneNumber, doctorById);
-            ps.addPatient(patient);
+            ps.add(patient);
             System.out.println("Patient was added !!!");
         } catch (DoctorNotFoundException e) {
             System.out.println(e.getMessage());

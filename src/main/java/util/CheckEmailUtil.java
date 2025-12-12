@@ -12,6 +12,8 @@ public abstract class CheckEmailUtil {
     }
 
     private static boolean checkEmail(String email) {
-        return email.contains("@");
+        if (email == null) return false;
+        String regex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        return email.matches(regex);
     }
 }
