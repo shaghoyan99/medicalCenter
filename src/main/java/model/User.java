@@ -4,8 +4,10 @@ package model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import util.PasswordUtil;
 
 import java.io.Serializable;
+import java.security.CryptoPrimitive;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +18,9 @@ public class User implements Serializable {
     private String name;
     private String surName;
     private String email;
-    private transient String password;
+    private String password;
     private Role role;
+
+
 
 }

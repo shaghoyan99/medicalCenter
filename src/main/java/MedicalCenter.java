@@ -14,6 +14,7 @@ import storage.Storage;
 import util.CheckEmailUtil;
 import util.DateUtil;
 import util.FillUtil;
+import util.PasswordUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -57,7 +58,8 @@ public class MedicalCenter implements Commands {
         try {
             String email = CheckEmailUtil.isValidEmail(emailStr);
             System.out.println("Please input password ");
-            String password = scanner.nextLine();
+            String passwordStr = scanner.nextLine();
+            String password = PasswordUtil.encrypt(passwordStr);
             if (us.getUserByEmail(email) == null) {
                 User user = new User(us.generateUserId(), name, surname, email, password, Role.USER);
                 us.add(user);
@@ -77,7 +79,7 @@ public class MedicalCenter implements Commands {
         System.out.println("Please input password");
         String password = scanner.nextLine();
         User userByEmail = us.getUserByEmail(email);
-        if (userByEmail != null && userByEmail.getPassword().equals(password)) {
+        if (userByEmail != null && PasswordUtil.decrypt(userByEmail.getPassword()).equals(password)) {
             currentUser = userByEmail;
             System.out.println("Welcome " + userByEmail.getName());
             userLogin();
@@ -153,6 +155,7 @@ public class MedicalCenter implements Commands {
                 File file = new File(folder, System.currentTimeMillis() + "patients.xlsx");
                 try (FileOutputStream out = new FileOutputStream(file)) {
                     workbook.write(out);
+                    System.out.println("Excel crated !!!");
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
