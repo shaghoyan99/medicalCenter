@@ -13,6 +13,7 @@ public abstract class FillUtil {
 
     public static final String DOCTOR_DATA_FILE = "D:\\Java Project\\medicalCenter\\src\\main\\resources\\data\\doctorData.data";
     public static final String PATIENT_DATA_FILE = "D:\\Java Project\\medicalCenter\\src\\main\\resources\\data\\patientData.data";
+    public static final String USER_DATA_FILE = "D:\\Java Project\\medicalCenter\\src\\main\\resources\\data\\userData.data";
 
     public static <T> void writeDataDoctor(Storage<T> storage) {
         try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(DOCTOR_DATA_FILE))) {
@@ -30,6 +31,15 @@ public abstract class FillUtil {
             System.out.println("File not found for Patient Data" + e);
         } catch (IOException e) {
             System.out.println("Failed to Serialize Patient Data" + e);
+        }
+    }
+    public static <T> void writeDataUser(Storage<T> storage) {
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(USER_DATA_FILE))) {
+            objectOutputStream.writeObject(storage);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found for User Data" + e);
+        } catch (IOException e) {
+            System.out.println("Failed to Serialize User Data" + e);
         }
     }
 

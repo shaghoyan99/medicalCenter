@@ -11,6 +11,10 @@ import static model.Profession.SURGEON;
 public interface Commands {
 
     String EXIT = "0";
+    String LOGIN = "1";
+    String REGISTER = "2";
+
+    String LOGOUT = "0";
     String ADD_DOCTOR = "1";
     String SEARCH_DOCTOR_BY_PROFESSION = "2";
     String DELETE_DOCTOR_BY_ID = "3";
@@ -19,8 +23,14 @@ public interface Commands {
     String PRINT_ALL_PATIENT_BY_DOCTOR = "6";
     String PRINT_ALL_PATIENT = "7";
 
-    static void printMainMenu() {
+    static void printMainManu() {
         System.out.println("Please input " + EXIT + " for exit");
+        System.out.println("Please input " + LOGIN + " for login");
+        System.out.println("Please input " + REGISTER + " for register");
+    }
+
+    static void printUserMenu() {
+        System.out.println("Please input " + LOGOUT + " for logout");
         System.out.println("Please input " + ADD_DOCTOR + " for added doctor");
         System.out.println("Please input " + SEARCH_DOCTOR_BY_PROFESSION + " for search doctor by profession");
         System.out.println("Please input " + DELETE_DOCTOR_BY_ID + " for delete doctor by id");

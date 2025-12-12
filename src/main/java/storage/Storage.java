@@ -2,29 +2,47 @@ package storage;
 
 
 import exception.DoctorNotFoundException;
+import lombok.NoArgsConstructor;
 import model.Doctor;
 import model.Patient;
 import model.Profession;
+import model.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@NoArgsConstructor
 public class Storage<T> implements Serializable {
 
     private List<T> objects = new ArrayList<>();
-    private int id;
+    private Map<String, T> map = new HashMap<>();
+    private int doctorId = 1;
+    private String userId;
 
-    public Storage() {
-        id = 1;
+
+    public int generateDoctorId() {
+        return doctorId++;
     }
 
-    public int generateId() {
-        return id++;
+    public String generateUserId() {
+        int count = 1;
+        userId = "User" + count++;
+        return userId;
     }
 
     public void add(T type) {
+        if (type instanceof User user) {
+            map.put(user.getEmail(), type);
+            return;
+        }
         objects.add(type);
+    }
+
+    public User getUserByEmail(String email) {
+        return (User) map.get(email);
     }
 
 
@@ -69,7 +87,7 @@ public class Storage<T> implements Serializable {
         }
     }
 
-    public void printPatientsByDoctor(Doctor doctor){
+    public void printPatientsByDoctor(Doctor doctor) {
         for (T object : objects) {
             if (object instanceof Patient && ((Patient) object).getDoctor().equals(doctor)) {
                 System.out.println(object);
